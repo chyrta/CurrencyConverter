@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="15dp">
+
+    <ImageView
+        android:id="@+id/iv_currency_flag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/tv_currency_symbol"
+        android:layout_alignBottom="@id/tv_currency_symbol"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp" />
+
+    <TextView
+        android:id="@+id/tv_currency_symbol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/iv_currency_flag"
+        android:layout_toRightOf="@id/iv_currency_flag"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        tools:text="EUR" />
+
+    <TextView
+        android:id="@+id/tv_currency_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_currency_symbol"
+        android:layout_toEndOf="@id/iv_currency_flag"
+        android:layout_toRightOf="@id/iv_currency_flag"
+        android:textColor="#919294"
+        android:textSize="14sp"
+        tools:text="Euro" />
+
+    <EditText
+        android:id="@+id/et_currency_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:inputType="numberDecimal"
+        tools:text="1.00" />
+
+</RelativeLayout>
