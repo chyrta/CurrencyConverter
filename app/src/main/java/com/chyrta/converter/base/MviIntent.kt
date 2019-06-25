@@ -1,3 +1,3 @@
 package com.chyrta.converter.base
 
-class MviIntent
+interface MviIntent
