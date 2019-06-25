@@ -18,8 +18,8 @@ fun addFragmentToActivity(
 }
 
 fun getCurrencyNameResId(context: Context, symbol: String) =
-        context.resources.getIdentifier("currency_" + symbol + "_name", "string",
+        context.resources.getIdentifier("currency_${symbol.toLowerCase()}_name", "string",
                 context.packageName)
 
 fun getCurrencyFlagResId(context: Context, symbol: String) = context.resources.getIdentifier(
-        "ic_" + symbol + "_flag", "drawable", context.packageName)
+        "ic_${symbol.toLowerCase()}_flag", "drawable", context.packageName)

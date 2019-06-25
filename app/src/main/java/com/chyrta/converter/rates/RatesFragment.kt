@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.chyrta.converter.R
 import com.chyrta.converter.base.MviView
+import com.chyrta.converter.data.model.Rate
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
@@ -38,15 +39,14 @@ class RatesFragment : Fragment(), MviView<RatesIntent, RatesViewState> {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_rates, container, false)
-        currenciesList = view.findViewById(R.id.rv_currencies)
-        currenciesList.layoutManager = LinearLayoutManager(context)
-        currenciesList.adapter = adapter
-        return view
+        return inflater.inflate(R.layout.fragment_rates, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        currenciesList = view.findViewById(R.id.rv_currencies)
+        currenciesList.layoutManager = LinearLayoutManager(context)
+        currenciesList.adapter = adapter
         bind()
     }
 
@@ -106,9 +106,7 @@ class RatesFragment : Fragment(), MviView<RatesIntent, RatesViewState> {
             return
         }
 
-        adapter.base = state.base
-        adapter.amount = state.amount
-        adapter.setRates(state.rates)
+        updateCurrenciesAdapter(state.base, state.amount, state.rates)
     }
 
     private fun showMessage(message: String) {
@@ -118,6 +116,21 @@ class RatesFragment : Fragment(), MviView<RatesIntent, RatesViewState> {
 
     private fun showLoadingRatesError(message: String) {
         showMessage(message)
+    }
+
+    private fun updateCurrenciesAdapter(base: String, amount: Float, rates: List<Rate>) {
+        if (adapter.symbolPosition.isEmpty()) {
+            adapter.symbolPosition.addAll(rates.map { it.symbol })
+        }
+
+        for (rate in rates) {
+            adapter.symbolRate[rate.symbol] = rate
+        }
+
+        adapter.base = base
+        adapter.amount = amount
+
+        adapter.notifyAdapter()
     }
 
     companion object {

@@ -17,6 +17,7 @@ import com.chyrta.converter.util.getCurrencyNameResId
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import java.util.*
+import kotlin.collections.ArrayList
 
 class RatesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -29,8 +30,8 @@ class RatesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val baseCurrencyChangedObservable: Observable<String>
         get() = baseCurrencyChangedSubject
 
-    private val symbolPosition = ArrayList<String>()
-    private val symbolRate = HashMap<String, Rate>()
+    var symbolRate = HashMap<String, Rate>()
+    var symbolPosition: ArrayList<String> = ArrayList()
 
     var base: String = "EUR"
         set(value) {
@@ -44,29 +45,18 @@ class RatesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         set(value) {
             if (field != value) {
                 field = value
-                notifyItemRangeChanged(0, symbolPosition.size - 1, amount)
             }
         }
 
-    fun setRates(rates: List<Rate>) {
-        if (symbolPosition.isEmpty()) {
-            symbolPosition.addAll(rates.map { it.symbol })
-        }
-
-        for (rate in rates) {
-            symbolRate[rate.symbol] = rate
-        }
-
+    fun notifyAdapter() {
         notifyItemRangeChanged(0, symbolPosition.size - 1, amount)
     }
 
     inner class RateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
         var ivCurrencyFlag: ImageView = itemView.findViewById(R.id.iv_currency_flag)
         var tvCurrencySymbol: TextView = itemView.findViewById(R.id.tv_currency_symbol)
         var tvCurrencyName: TextView = itemView.findViewById(R.id.tv_currency_name)
         var etCurrencyAmount: EditText = itemView.findViewById(R.id.et_currency_amount)
-
         var symbol: String = ""
 
         private val textWatcher: TextWatcher = object : TextWatcher {
@@ -83,40 +73,42 @@ class RatesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
         }
 
-        fun bind(rate: Rate) {
+        private val focusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            var pickedCurrencyAmount = etCurrencyAmount.text.toString()
+            if (pickedCurrencyAmount.isEmpty()) pickedCurrencyAmount = "0"
+            baseCurrencyChangedSubject.onNext(symbol)
+            amountChangedSubject.onNext(Rate(symbol, pickedCurrencyAmount.toFloat()))
 
+            if (!hasFocus) {
+                return@OnFocusChangeListener
+            }
+
+            layoutPosition.takeIf { it > 0 }?.also { currentPosition ->
+                symbolPosition.removeAt(currentPosition).also { symbolPosition.add(0, it) }
+                notifyItemMoved(currentPosition, 0)
+            }
+        }
+
+        fun bind(rate: Rate) {
             if (symbol != rate.symbol) {
                 initView(rate)
                 this.symbol = rate.symbol
             }
-
             if (!etCurrencyAmount.isFocused) {
                 etCurrencyAmount.setText(calculateRates(amount, rate.rate))
             }
         }
 
         fun initView(rate: Rate) {
-            val symbol = rate.symbol.toLowerCase()
+            val symbol = rate.symbol
             val currencyName = getCurrencyNameResId(itemView.context, symbol)
             val currencyIcon = getCurrencyFlagResId(itemView.context, symbol)
 
             tvCurrencyName.setText(currencyName)
-            tvCurrencySymbol.text = symbol.toUpperCase()
-
-            etCurrencyAmount.addTextChangedListener(textWatcher)
-
+            tvCurrencySymbol.setText(symbol)
             ivCurrencyFlag.setImageResource(currencyIcon)
-
-            etCurrencyAmount.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
-                if (!hasFocus) {
-                    return@OnFocusChangeListener
-                }
-
-                layoutPosition.takeIf { it > 0 }?.also { currentPosition ->
-                    symbolPosition.removeAt(currentPosition).also { symbolPosition.add(0, it) }
-                    notifyItemMoved(currentPosition, 0)
-                }
-            }
+            etCurrencyAmount.addTextChangedListener(textWatcher)
+            etCurrencyAmount.setOnFocusChangeListener(focusChangeListener)
         }
     }
 
@@ -126,9 +118,9 @@ class RatesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): RecyclerView.ViewHolder {
         return RateViewHolder(
-            LayoutInflater
-                .from(parent.context)
-                .inflate(R.layout.item_currency_conversion, parent, false)
+                LayoutInflater
+                        .from(parent.context)
+                        .inflate(R.layout.item_currency_conversion, parent, false)
         )
     }
 
