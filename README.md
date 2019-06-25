@@ -1,6 +1,8 @@
-A fully-reactive currency converter utilizing Model-View-Intent pattern.
+# Currency Converter
 
-# Screenshots
+A fully-reactive currency converter, utilizing Model-View-Intent pattern.
+
+## Screenshots
 
 <p>
   <img src="art/screenshot.png" width="45%">
@@ -8,33 +10,33 @@ A fully-reactive currency converter utilizing Model-View-Intent pattern.
 </p>
 
 
-# Architecture
+## Architecture
 
 This project utilizes MVI pattern according to the official sample by [oldergod](https://github.com/oldergod/android-architecture)
 
-# Unit tests
+## Unit tests
 
-To run unit test use this command:
+To run unit tests, use this command:
 
 ```
 ./gradlew test
 ```
 
-# Linting
+## Linting
 
-To perform linting of the code the following command can be used:
+To perform linting of the code:
 
 ```
 ./gradlew ktlint
 ```
 
-Also, there is another command to automatically fix the code:
+Also, there is another command to fix the code automatically:
 
 ```
 ./gradlew ktlintFormat
 ```
 
-# Libraries
+## Libraries
 
 * RxJava 2
 * Retrofit
