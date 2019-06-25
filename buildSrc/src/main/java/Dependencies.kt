@@ -21,8 +21,6 @@ object ProjectDependencies {
     val supportRecyclerView = "com.android.support:recyclerview-v7:${Versions.supportLibrary}"
     val supportDesign = "com.android.support:design:${Versions.supportLibrary}"
 
-    val currencyEditText = "com.shuhart.moneyedittext:moneyedittext-kotlin:${Versions.currencyEditText}"
-
     val mockitoKotlin = "com.nhaarman:mockito-kotlin:${Versions.mockitoKotlin}"
     val junit = "junit:junit:${Versions.junit}"
     val mockito = "org.mockito:mockito-all:${Versions.mockito}"
@@ -43,7 +41,6 @@ object Versions {
     val releaseVersionCode = 1
     val releaseVersionName = "1.0"
 
-    val currencyEditText = "1.0"
     val supportLibrary = "28.0.0"
     val kotlin = "1.3.31"
     val retrofit = "2.6.0"

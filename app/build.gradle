@@ -31,7 +31,6 @@ dependencies {
     implementation ProjectDependencies.supportAppCompat
     implementation ProjectDependencies.supportRecyclerView
     implementation ProjectDependencies.supportDesign
-    implementation ProjectDependencies.currencyEditText
     implementation ProjectDependencies.rxjava
     implementation ProjectDependencies.rxandroid
     implementation ProjectDependencies.retrofit
